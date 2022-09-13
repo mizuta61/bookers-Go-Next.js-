@@ -1,0 +1,40 @@
+services: 
+  # server:
+  #   tty: true
+  #   build:
+  #     context: ./server/
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 3000:3000
+  #   volumes:
+  #     - ./server:/app
+  #   command: rails server -b 0.0.0.0
+  #   depends_on:
+  #     - db
+  server:
+    tty: true
+    build:
+      context: ./api/
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - ./api:/app
+    command: go run main.go
+    depends_on:
+      - db
+  front: 
+    build:
+      context: ./front/
+      dockerfile: Dockerfile
+    volumes:
+      - ./front:/usr/src/app
+    command: 'yarn dev'
+    ports:
+      - "8000:3000"
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: password
+    
