@@ -17,7 +17,7 @@ const CreateForm = () => {
   };
 
   const createBook = async () => {
-    await axios.post(`${API_URL}/books`,  book );
+    await axios.post(`${API_URL}/books`, book );
   };
 
   return (
