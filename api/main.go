@@ -1,7 +1,7 @@
 package main
 
 import (
-	"api/ent"
+	"api/db"
 	"api/model"
 	"api/test_responses"
 	"context"
@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 
@@ -26,15 +27,12 @@ func main()  {
 	})
 	r.POST("/books", func(c *gin.Context) {
 		ctx := context.Background()
-    client, err := ent.Open("mysql", "%:password@tcp(localhost:3306)/var/lib/mysql/?parseTime=True")
-		if _, err = model.CreateBook(ctx, client); err != nil {
-			log.Fatal(err)
-		}
-		book, err := model.CreateBook(ctx, client)
-		if err != nil {
-			log.Fatalf("failed opening connection to sqlite: %v", err)
-		}
+    client := db.Main()
 		defer client.Close()
+		book, err := model.CreateBook(ctx, client, c)
+		if err != nil {
+			log.Fatalf("failed opening connection to mysql:db %v", err)
+		}
 		c.JSON(200, book)
   })
 	

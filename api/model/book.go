@@ -2,11 +2,12 @@ package model
 
 import (
 	"api/ent"
-	"api/ent/book"
 	"context"
 	"fmt"
 	"log"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Book struct {
@@ -17,11 +18,13 @@ type Book struct {
 	UpdatedAt time.Time  `json:"updated_at"`
 }
 
-func CreateBook(ctx context.Context, client *ent.Client) (*ent.Book, error){
+func CreateBook(ctx context.Context, client *ent.Client, c *gin.Context) (*ent.Book, error){
+	var form Book
+  c.ShouldBind(&form)
 	book, err := client.Book.
 	Create().
-	SetTitle(book.FieldTitle).
-	SetBody(book.FieldBody).
+	SetTitle(form.Title).
+	SetBody(form.Body).
 	Save(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed creating user: %w", err)
