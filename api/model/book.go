@@ -32,3 +32,18 @@ func CreateBook(ctx context.Context, client *ent.Client, c *gin.Context) (*ent.B
 	log.Println("book was created: ", book)
 	return book, err
 }
+
+func UpdateBook(ctx context.Context, client *ent.Client, c *gin.Context, book_id int) (*ent.Book, error){
+	var form Book
+  c.ShouldBind(&form)
+	book, err := client.Book.
+	UpdateOneID(book_id). 
+	SetTitle(form.Title).
+	SetBody(form.Body).
+	Save(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed creating user: %w", err)
+	}
+	log.Println("book was updated: ", book)
+	return book, err
+}

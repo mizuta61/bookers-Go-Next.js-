@@ -21,9 +21,7 @@ const UpdateForm: FC<Props> = ({ book }) => {
   };
   const  API_URL = process.env.NEXT_PUBLIC_API_URL;
   const updateBook = async () => {
-    await axios.patch(`${API_URL}/books/${book.id}`, {
-      book: value,
-    });
+    await axios.patch(`${API_URL}/books/${book.id}`, value);
   };
 
   return (
