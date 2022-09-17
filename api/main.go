@@ -75,18 +75,20 @@ func main()  {
 		}
 		c.JSON(200, book)
 	})
-	// r.DELETE("books/:id", func(c *gin.Context)  {
-	// 	id := c.Param("id") 
-	// 	ctx := context.Background()
-  //   client := db.Main()
-	// 	defer client.Close()
-	// 	err := client.Book.
-  //   DeleteOne(a8m).
-  //   Exec(ctx)
-	// 	if err != nil {
-	// 		log.Fatal(err)
-	//   }
-	// })
+	r.DELETE("books/:id", func(c *gin.Context)  {
+		id := c.Param("id") 
+		var book_id int
+		book_id, _ = strconv.Atoi(id)
+		ctx := context.Background()
+    client := db.Main()
+		defer client.Close()
+		err := client.Book.
+    DeleteOneID(book_id).
+    Exec(ctx)
+		if err != nil {
+			log.Fatal(err)
+	  }
+	})
 
 	r.Run()
 }
