@@ -3,7 +3,6 @@ package main
 import (
 	"api/db"
 	"api/model"
-	"api/test_responses"
 	"context"
 	"log"
 
@@ -23,7 +22,16 @@ func main()  {
 
 	
 	r.GET("/books", func(c *gin.Context)  {
-		c.JSON(200, test_responses.TestBooks())
+		ctx := context.Background()
+    client := db.Main()
+		defer client.Close()
+		books, err := client.Book.     
+    Query().                   
+    All(ctx)
+		if err != nil {
+			log.Fatal(err)
+	  }
+    c.JSON(200, books)
 	})
 	r.POST("/books", func(c *gin.Context) {
 		ctx := context.Background()
