@@ -17,14 +17,13 @@ import (
 
 func main()  {
 	r := gin.Default()
-
 	config := cors.DefaultConfig()
   config.AllowOrigins = []string{"http://localhost:8000"}
   r.Use(cors.New(config))
 
-	
+	ctx := context.Background()
+
 	r.GET("/books", func(c *gin.Context)  {
-		ctx := context.Background()
     client := db.OpenMariadb()
 		defer client.Close()
 		books, err := client.Book.     
@@ -36,7 +35,6 @@ func main()  {
     c.JSON(200, books)
 	})
 	r.POST("/books", func(c *gin.Context) {
-		ctx := context.Background()
     client := db.OpenMariadb()
 		defer client.Close()
 		book, err := model.CreateBook(ctx, client, c)
@@ -50,7 +48,6 @@ func main()  {
 		id := c.Param("id")
 		var book_id int
 		book_id, _ = strconv.Atoi(id) 
-		ctx := context.Background()
     client := db.OpenMariadb()
 		defer client.Close()
 		book, err := client.Book.     
@@ -66,7 +63,6 @@ func main()  {
 		id := c.Param("id") 
 		var book_id int
 		book_id, _ = strconv.Atoi(id) 
-		ctx := context.Background()
     client := db.OpenMariadb()
 		defer client.Close()
 		book, err := model.UpdateBook(ctx, client, c, book_id)
@@ -79,7 +75,6 @@ func main()  {
 		id := c.Param("id") 
 		var book_id int
 		book_id, _ = strconv.Atoi(id)
-		ctx := context.Background()
     client := db.OpenMariadb()
 		defer client.Close()
 		err := client.Book.
