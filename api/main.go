@@ -60,29 +60,18 @@ func main()  {
 		c.JSON(200, book)
 	})
 	r.PATCH("books/:id", func(c *gin.Context)  {
-		id := c.Param("id") 
-		var book_id int
-		book_id, _ = strconv.Atoi(id) 
     client := db.OpenMariadb()
 		defer client.Close()
-		book, err := models.UpdateBook(ctx, client, c, book_id)
+		book, err := models.UpdateBook(ctx, client, c)
 		if err != nil {
 			log.Fatalf("failed opening connection to mysql:db %v", err)
 		}
 		c.JSON(200, book)
 	})
 	r.DELETE("books/:id", func(c *gin.Context)  {
-		id := c.Param("id") 
-		var book_id int
-		book_id, _ = strconv.Atoi(id)
     client := db.OpenMariadb()
 		defer client.Close()
-		err := client.Book.
-    DeleteOneID(book_id).
-    Exec(ctx)
-		if err != nil {
-			log.Fatal(err)
-	  }
+		models.DestroyBook(ctx, client, c)
 	})
 
 	r.Run()

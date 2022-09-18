@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -33,7 +34,10 @@ func CreateBook(ctx context.Context, client *ent.Client, c *gin.Context) (*ent.B
 	return book, err
 }
 
-func UpdateBook(ctx context.Context, client *ent.Client, c *gin.Context, book_id int) (*ent.Book, error){
+func UpdateBook(ctx context.Context, client *ent.Client, c *gin.Context) (*ent.Book, error){
+	id := c.Param("id") 
+	var book_id int
+	book_id, _ = strconv.Atoi(id) 
 	var form Book
   c.ShouldBind(&form)
 	book, err := client.Book.
@@ -46,4 +50,16 @@ func UpdateBook(ctx context.Context, client *ent.Client, c *gin.Context, book_id
 	}
 	log.Println("book was updated: ", book)
 	return book, err
+}
+
+func DestroyBook(ctx context.Context, client *ent.Client, c *gin.Context) {
+	id := c.Param("id") 
+	var book_id int
+	book_id, _ = strconv.Atoi(id)
+	err := client.Book.
+	DeleteOneID(book_id).
+	Exec(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
