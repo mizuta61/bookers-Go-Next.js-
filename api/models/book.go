@@ -2,10 +2,8 @@ package models
 
 import (
 	"api/db"
-	"api/ent"
 	"api/ent/book"
 	"context"
-	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -21,7 +19,16 @@ type Book struct {
 	UpdatedAt time.Time  `json:"updated_at"`
 }
 
-func CreateBook(ctx context.Context, client *ent.Client, c *gin.Context) (*ent.Book, error){
+func BookId(c *gin.Context) int {
+  id := c.Param("id") 
+	var book_id int
+	book_id, _ = strconv.Atoi(id) 
+	return book_id
+}
+
+func CreateBook(ctx context.Context, c *gin.Context) {
+	client := db.OpenMariadb()
+	defer client.Close()
 	var form Book
   c.ShouldBind(&form)
 	book, err := client.Book.
@@ -30,16 +37,16 @@ func CreateBook(ctx context.Context, client *ent.Client, c *gin.Context) (*ent.B
 	SetBody(form.Body).
 	Save(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed creating user: %w", err)
+		log.Fatal(err)
 	}
 	log.Println("book was created: ", book)
-	return book, err
+	c.JSON(200, book)
 }
 
-func UpdateBook(ctx context.Context, client *ent.Client, c *gin.Context) (*ent.Book, error){
-	id := c.Param("id") 
-	var book_id int
-	book_id, _ = strconv.Atoi(id) 
+func UpdateBook(ctx context.Context, c *gin.Context){
+	client := db.OpenMariadb()
+	defer client.Close()
+	book_id := BookId(c)
 	var form Book
   c.ShouldBind(&form)
 	book, err := client.Book.
@@ -48,18 +55,16 @@ func UpdateBook(ctx context.Context, client *ent.Client, c *gin.Context) (*ent.B
 	SetBody(form.Body).
 	Save(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed creating user: %w", err)
+		log.Fatal(err)
 	}
 	log.Println("book was updated: ", book)
-	return book, err
+	c.JSON(200, book)
 }
 
 func DestroyBook(ctx context.Context, c *gin.Context) {
 	client := db.OpenMariadb()
 	defer client.Close()
-	id := c.Param("id") 
-	var book_id int
-	book_id, _ = strconv.Atoi(id)
+	book_id := BookId(c)
 	err := client.Book.
 	DeleteOneID(book_id).
 	Exec(ctx)
@@ -71,9 +76,7 @@ func DestroyBook(ctx context.Context, c *gin.Context) {
 func GetBook(ctx context.Context, c *gin.Context) {
 	client := db.OpenMariadb()
 	defer client.Close()
-	id := c.Param("id")
-	var book_id int
-	book_id, _ = strconv.Atoi(id) 
+	book_id := BookId(c) 
 	book, err := client.Book.     
 	Query().  
 	Where(book.ID(book_id)).                 

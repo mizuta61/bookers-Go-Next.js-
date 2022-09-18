@@ -1,10 +1,8 @@
 package main
 
 import (
-	"api/db"
 	"api/models"
 	"context"
-	"log"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -24,27 +22,14 @@ func main()  {
 	r.GET("/books", func(c *gin.Context)  {
     models.BookLists(ctx, c)
 	})
-	r.POST("/books", func(c *gin.Context) {
-    client := db.OpenMariadb()
-		defer client.Close()
-		book, err := models.CreateBook(ctx, client, c)
-		if err != nil {
-			log.Fatalf("failed opening connection to mysql:db %v", err)
-		}
-		c.JSON(200, book)
+	r.POST("/books", func(c *gin.Context) { 
+		models.CreateBook(ctx, c)	
   })
-	
 	r.GET("books/:id", func(c *gin.Context)  { 
 		models.GetBook(ctx, c)
 	})
-	r.PATCH("books/:id", func(c *gin.Context)  {
-    client := db.OpenMariadb()
-		defer client.Close()
-		book, err := models.UpdateBook(ctx, client, c)
-		if err != nil {
-			log.Fatalf("failed opening connection to mysql:db %v", err)
-		}
-		c.JSON(200, book)
+	r.PATCH("books/:id", func(c *gin.Context)  {   
+		models.UpdateBook(ctx, c)
 	})
 	r.DELETE("books/:id", func(c *gin.Context)  {
 		models.DestroyBook(ctx, c)
