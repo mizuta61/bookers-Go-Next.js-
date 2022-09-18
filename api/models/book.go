@@ -1,7 +1,9 @@
 package models
 
 import (
+	"api/db"
 	"api/ent"
+	"api/ent/book"
 	"context"
 	"fmt"
 	"log"
@@ -52,7 +54,9 @@ func UpdateBook(ctx context.Context, client *ent.Client, c *gin.Context) (*ent.B
 	return book, err
 }
 
-func DestroyBook(ctx context.Context, client *ent.Client, c *gin.Context) {
+func DestroyBook(ctx context.Context, c *gin.Context) {
+	client := db.OpenMariadb()
+	defer client.Close()
 	id := c.Param("id") 
 	var book_id int
 	book_id, _ = strconv.Atoi(id)
@@ -62,4 +66,32 @@ func DestroyBook(ctx context.Context, client *ent.Client, c *gin.Context) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func GetBook(ctx context.Context, c *gin.Context) {
+	client := db.OpenMariadb()
+	defer client.Close()
+	id := c.Param("id")
+	var book_id int
+	book_id, _ = strconv.Atoi(id) 
+	book, err := client.Book.     
+	Query().  
+	Where(book.ID(book_id)).                 
+	Only(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	c.JSON(200, book)
+}
+
+func BookLists(ctx context.Context, c *gin.Context) {
+	client := db.OpenMariadb()
+	defer client.Close()
+	books, err := client.Book.     
+	Query().                   
+	All(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	c.JSON(200, books)
 }

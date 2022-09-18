@@ -2,11 +2,9 @@ package main
 
 import (
 	"api/db"
-	"api/ent/book"
 	"api/models"
 	"context"
 	"log"
-	"strconv"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -24,15 +22,7 @@ func main()  {
 	ctx := context.Background()
 
 	r.GET("/books", func(c *gin.Context)  {
-    client := db.OpenMariadb()
-		defer client.Close()
-		books, err := client.Book.     
-    Query().                   
-    All(ctx)
-		if err != nil {
-			log.Fatal(err)
-	  }
-    c.JSON(200, books)
+    models.BookLists(ctx, c)
 	})
 	r.POST("/books", func(c *gin.Context) {
     client := db.OpenMariadb()
@@ -44,20 +34,8 @@ func main()  {
 		c.JSON(200, book)
   })
 	
-	r.GET("books/:id", func(c *gin.Context)  {
-		id := c.Param("id")
-		var book_id int
-		book_id, _ = strconv.Atoi(id) 
-    client := db.OpenMariadb()
-		defer client.Close()
-		book, err := client.Book.     
-    Query().  
-		Where(book.ID(book_id)).                 
-    Only(ctx)
-		if err != nil {
-			log.Fatal(err)
-	  }
-		c.JSON(200, book)
+	r.GET("books/:id", func(c *gin.Context)  { 
+		models.GetBook(ctx, c)
 	})
 	r.PATCH("books/:id", func(c *gin.Context)  {
     client := db.OpenMariadb()
@@ -69,9 +47,7 @@ func main()  {
 		c.JSON(200, book)
 	})
 	r.DELETE("books/:id", func(c *gin.Context)  {
-    client := db.OpenMariadb()
-		defer client.Close()
-		models.DestroyBook(ctx, client, c)
+		models.DestroyBook(ctx, c)
 	})
 
 	r.Run()
