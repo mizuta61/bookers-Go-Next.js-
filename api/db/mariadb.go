@@ -9,7 +9,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func Main() (*ent.Client) {
+func OpenMariadb() (*ent.Client) {
     client, err := ent.Open("mysql", "root:password@tcp(db:3306)/mysql?parseTime=True")
     if err != nil {
         log.Fatal(err)

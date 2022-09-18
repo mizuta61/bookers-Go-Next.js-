@@ -1,16 +1,4 @@
 services: 
-  # server:
-  #   tty: true
-  #   build:
-  #     context: ./server/
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - 3000:3000
-  #   volumes:
-  #     - ./server:/app
-  #   command: rails server -b 0.0.0.0
-  #   depends_on:
-  #     - db
   server:
     tty: true
     build:

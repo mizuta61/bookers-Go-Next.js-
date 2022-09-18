@@ -25,7 +25,7 @@ func main()  {
 	
 	r.GET("/books", func(c *gin.Context)  {
 		ctx := context.Background()
-    client := db.Main()
+    client := db.OpenMariadb()
 		defer client.Close()
 		books, err := client.Book.     
     Query().                   
@@ -37,7 +37,7 @@ func main()  {
 	})
 	r.POST("/books", func(c *gin.Context) {
 		ctx := context.Background()
-    client := db.Main()
+    client := db.OpenMariadb()
 		defer client.Close()
 		book, err := model.CreateBook(ctx, client, c)
 		if err != nil {
@@ -51,7 +51,7 @@ func main()  {
 		var book_id int
 		book_id, _ = strconv.Atoi(id) 
 		ctx := context.Background()
-    client := db.Main()
+    client := db.OpenMariadb()
 		defer client.Close()
 		book, err := client.Book.     
     Query().  
@@ -67,7 +67,7 @@ func main()  {
 		var book_id int
 		book_id, _ = strconv.Atoi(id) 
 		ctx := context.Background()
-    client := db.Main()
+    client := db.OpenMariadb()
 		defer client.Close()
 		book, err := model.UpdateBook(ctx, client, c, book_id)
 		if err != nil {
@@ -80,7 +80,7 @@ func main()  {
 		var book_id int
 		book_id, _ = strconv.Atoi(id)
 		ctx := context.Background()
-    client := db.Main()
+    client := db.OpenMariadb()
 		defer client.Close()
 		err := client.Book.
     DeleteOneID(book_id).
