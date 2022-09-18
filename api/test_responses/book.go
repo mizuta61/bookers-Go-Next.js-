@@ -1,12 +1,12 @@
 package test_responses
 
 import (
-	"api/model"
+	"api/models"
 	"time"
 )	
 
-func TestBooks() []model.Book {
-	books := [] model.Book{
+func TestBooks() []models.Book {
+	books := [] models.Book{
 		{
       Id: 1,
       Title: "test1",

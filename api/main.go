@@ -3,7 +3,7 @@ package main
 import (
 	"api/db"
 	"api/ent/book"
-	"api/model"
+	"api/models"
 	"context"
 	"log"
 	"strconv"
@@ -37,7 +37,7 @@ func main()  {
 	r.POST("/books", func(c *gin.Context) {
     client := db.OpenMariadb()
 		defer client.Close()
-		book, err := model.CreateBook(ctx, client, c)
+		book, err := models.CreateBook(ctx, client, c)
 		if err != nil {
 			log.Fatalf("failed opening connection to mysql:db %v", err)
 		}
@@ -65,7 +65,7 @@ func main()  {
 		book_id, _ = strconv.Atoi(id) 
     client := db.OpenMariadb()
 		defer client.Close()
-		book, err := model.UpdateBook(ctx, client, c, book_id)
+		book, err := models.UpdateBook(ctx, client, c, book_id)
 		if err != nil {
 			log.Fatalf("failed opening connection to mysql:db %v", err)
 		}
