@@ -14,7 +14,7 @@ import (
 func main()  {
 	r := gin.Default()
 	config := cors.DefaultConfig()
-  config.AllowOrigins = []string{"http://localhost:8000"}
+  config.AllowOrigins = []string{"http://localhost:3000"}
   r.Use(cors.New(config))
 
 	ctx := context.Background()
