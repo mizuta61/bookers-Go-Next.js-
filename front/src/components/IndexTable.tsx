@@ -17,7 +17,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 
 const IndexTable = () => {
-  const  API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [books, setBooks] = useState<Book[]>([]);
   const [selectedBookId, setSelectedBookId] = useState<number | null>(null);
   const selectedBook = books.find((book) => book.id === selectedBookId);

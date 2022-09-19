@@ -8,7 +8,7 @@ import Box from "@mui/material/Box";
 import { Book, BookCreate } from "../types/Book";
 
 const CreateForm = () => {
-  const  API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const initialBook: BookCreate = { title: "", body: "" }
   const [book, setBook] = useState(initialBook);
 

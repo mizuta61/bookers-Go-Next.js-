@@ -9,7 +9,7 @@ const Edit = () => {
   const router = useRouter();
   const bookId = router.query.id;
   const [book, setBook] = useState(null);
-  const  API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   useEffect(() => {
     if (!bookId) return;
     fetch(`${API_URL}/books/${bookId}`)
