@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, FC } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
@@ -7,7 +7,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { Book, BookCreate } from "../types/Book";
 
-const CreateForm = () => {
+const CreateForm: FC = () => {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const initialBook: BookCreate = { title: "", body: "" }
   const [book, setBook] = useState(initialBook);

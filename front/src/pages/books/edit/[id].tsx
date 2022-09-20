@@ -4,8 +4,9 @@ import UpdateForm from "../../../components/UpdateForm";
 import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import { NextPage } from "next";
 
-const Edit = () => {
+const Edit: NextPage = () => {
   const router = useRouter();
   const bookId = router.query.id;
   const [book, setBook] = useState(null);

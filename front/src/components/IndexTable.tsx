@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FC } from "react";
 import { DateTime } from "luxon";
 import Link from "next/link";
 import axios from "axios";
@@ -16,7 +16,7 @@ import { Book } from "../types/Book";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 
-const IndexTable = () => {
+const IndexTable: FC = () => {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [books, setBooks] = useState<Book[]>([]);
   const [selectedBookId, setSelectedBookId] = useState<number | null>(null);
@@ -46,7 +46,7 @@ const IndexTable = () => {
     width: 400,
     bgcolor: "lightblue",
     p: 4,
-    borderRadius: "0.5em"
+    borderRadius: "0.5em",
   };
 
   return (
@@ -110,7 +110,9 @@ const IndexTable = () => {
       {selectedBook && (
         <Modal open>
           <Box sx={style}>
-            <Button onClick={() => handleShowDetails()} variant="contained">Close ✖️</Button>
+            <Button onClick={() => handleShowDetails()} variant="contained">
+              Close ✖️
+            </Button>
             <Box component="p">ID: {selectedBook.id}</Box>
             <Box component="p">Title: {selectedBook.title}</Box>
             <Box component="p">Body: {selectedBook.body}</Box>

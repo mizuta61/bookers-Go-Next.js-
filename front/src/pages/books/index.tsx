@@ -3,8 +3,9 @@ import IndexTable from "../../components/IndexTable";
 import Typography from "@mui/material/Typography";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Button from "@mui/material/Button";
+import { NextPage } from "next";
 
-const BookList = () => {
+const BookList: NextPage = () => {
   const { data: session } = useSession();
   return (
     <>

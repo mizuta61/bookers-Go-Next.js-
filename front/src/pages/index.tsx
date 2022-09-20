@@ -2,9 +2,10 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
-import Box from '@mui/material/Box';
+import Box from "@mui/material/Box";
+import { NextPage } from "next";
 
-export default function Component() {
+const Component: NextPage = () => {
   const { data: session } = useSession();
   if (session) {
     return (
@@ -54,4 +55,5 @@ export default function Component() {
       </Typography>
     </>
   );
-}
+};
+export default Component;
