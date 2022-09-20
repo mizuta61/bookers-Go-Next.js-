@@ -19,10 +19,12 @@ type Book struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func BookId(c *gin.Context) int {
+func GetBookId(c *gin.Context) int {
 	id := c.Param("id")
-	var book_id int
-	book_id, _ = strconv.Atoi(id)
+	book_id, err := strconv.Atoi(id)
+  if err != nil {
+		log.Fatal(err)
+	}
 	return book_id
 }
 
@@ -46,7 +48,7 @@ func CreateBook(ctx context.Context, c *gin.Context) {
 func UpdateBook(ctx context.Context, c *gin.Context) {
 	client := db.OpenMariadb()
 	defer client.Close()
-	book_id := BookId(c)
+	book_id := GetBookId(c)
 	var form Book
 	c.ShouldBind(&form)
 	book, err := client.Book.
@@ -64,7 +66,7 @@ func UpdateBook(ctx context.Context, c *gin.Context) {
 func DestroyBook(ctx context.Context, c *gin.Context) {
 	client := db.OpenMariadb()
 	defer client.Close()
-	book_id := BookId(c)
+	book_id := GetBookId(c)
 	err := client.Book.
 		DeleteOneID(book_id).
 		Exec(ctx)
@@ -76,7 +78,7 @@ func DestroyBook(ctx context.Context, c *gin.Context) {
 func GetBook(ctx context.Context, c *gin.Context) {
 	client := db.OpenMariadb()
 	defer client.Close()
-	book_id := BookId(c)
+	book_id := GetBookId(c)
 	book, err := client.Book.
 		Query().
 		Where(book.ID(book_id)).
@@ -87,7 +89,7 @@ func GetBook(ctx context.Context, c *gin.Context) {
 	c.JSON(200, book)
 }
 
-func BookLists(ctx context.Context, c *gin.Context) {
+func GetBooks(ctx context.Context, c *gin.Context) {
 	client := db.OpenMariadb()
 	defer client.Close()
 	books, err := client.Book.
