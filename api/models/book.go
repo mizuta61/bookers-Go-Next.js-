@@ -2,27 +2,19 @@ package models
 
 import (
 	"api/db"
+	"api/ent"
 	"api/ent/book"
 	"context"
 	"log"
 	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
-type Book struct {
-	Id        int       `json:"id" form:"id"`
-	Title     string    `json:"title" form:"title"`
-	Body      string    `json:"body" form:"body"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-}
-
 func GetBookId(c *gin.Context) int {
 	id := c.Param("id")
 	book_id, err := strconv.Atoi(id)
-  if err != nil {
+	if err != nil {
 		log.Fatal(err)
 	}
 	return book_id
@@ -31,7 +23,7 @@ func GetBookId(c *gin.Context) int {
 func CreateBook(ctx context.Context, c *gin.Context) {
 	client := db.OpenMariadb()
 	defer client.Close()
-	var form Book
+	var form ent.Book
 	c.ShouldBind(&form)
 	book, err := client.Book.
 		Create().
@@ -49,7 +41,7 @@ func UpdateBook(ctx context.Context, c *gin.Context) {
 	client := db.OpenMariadb()
 	defer client.Close()
 	book_id := GetBookId(c)
-	var form Book
+	var form ent.Book
 	c.ShouldBind(&form)
 	book, err := client.Book.
 		UpdateOneID(book_id).
