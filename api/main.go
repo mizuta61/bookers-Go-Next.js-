@@ -1,9 +1,12 @@
 package main
 
 import (
+	"api/db"
+	"api/ent/migrate"
 	"api/models"
 	"context"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/gin-contrib/cors"
@@ -26,16 +29,16 @@ func main() {
 
 	ctx := context.Background()
 
-	// client := db.OpenMariadb()
-	// defer client.Close()
-	// err = client.Schema.Create(
-	// 	ctx,
-	// 	migrate.WithDropIndex(true),
-	// 	migrate.WithDropColumn(true),
-	// )
-	// if err != nil {
-	// 	log.Fatalf("failed creating schema resources: %v", err)
-	// }
+	client := db.OpenMariadb()
+	defer client.Close()
+	err = client.Schema.Create(
+		ctx,
+		migrate.WithDropIndex(true),
+		migrate.WithDropColumn(true),
+	)
+	if err != nil {
+		log.Fatalf("failed creating schema resources: %v", err)
+	}
 
 	r.GET("/books", func(c *gin.Context) {
 		models.GetBooks(ctx, c)
