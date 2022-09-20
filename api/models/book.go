@@ -12,17 +12,17 @@ import (
 )
 
 type Book struct {
-	Id        int        `json:"id" form:"id"`
-	Title     string     `json:"title" form:"title"`
-	Body      string     `json:"body" form:"body"`
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
+	Id        int       `json:"id" form:"id"`
+	Title     string    `json:"title" form:"title"`
+	Body      string    `json:"body" form:"body"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func BookId(c *gin.Context) int {
-  id := c.Param("id") 
+	id := c.Param("id")
 	var book_id int
-	book_id, _ = strconv.Atoi(id) 
+	book_id, _ = strconv.Atoi(id)
 	return book_id
 }
 
@@ -30,12 +30,12 @@ func CreateBook(ctx context.Context, c *gin.Context) {
 	client := db.OpenMariadb()
 	defer client.Close()
 	var form Book
-  c.ShouldBind(&form)
+	c.ShouldBind(&form)
 	book, err := client.Book.
-	Create().
-	SetTitle(form.Title).
-	SetBody(form.Body).
-	Save(ctx)
+		Create().
+		SetTitle(form.Title).
+		SetBody(form.Body).
+		Save(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -43,17 +43,17 @@ func CreateBook(ctx context.Context, c *gin.Context) {
 	c.JSON(200, book)
 }
 
-func UpdateBook(ctx context.Context, c *gin.Context){
+func UpdateBook(ctx context.Context, c *gin.Context) {
 	client := db.OpenMariadb()
 	defer client.Close()
 	book_id := BookId(c)
 	var form Book
-  c.ShouldBind(&form)
+	c.ShouldBind(&form)
 	book, err := client.Book.
-	UpdateOneID(book_id). 
-	SetTitle(form.Title).
-	SetBody(form.Body).
-	Save(ctx)
+		UpdateOneID(book_id).
+		SetTitle(form.Title).
+		SetBody(form.Body).
+		Save(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -66,8 +66,8 @@ func DestroyBook(ctx context.Context, c *gin.Context) {
 	defer client.Close()
 	book_id := BookId(c)
 	err := client.Book.
-	DeleteOneID(book_id).
-	Exec(ctx)
+		DeleteOneID(book_id).
+		Exec(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -76,11 +76,11 @@ func DestroyBook(ctx context.Context, c *gin.Context) {
 func GetBook(ctx context.Context, c *gin.Context) {
 	client := db.OpenMariadb()
 	defer client.Close()
-	book_id := BookId(c) 
-	book, err := client.Book.     
-	Query().  
-	Where(book.ID(book_id)).                 
-	Only(ctx)
+	book_id := BookId(c)
+	book, err := client.Book.
+		Query().
+		Where(book.ID(book_id)).
+		Only(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -90,9 +90,9 @@ func GetBook(ctx context.Context, c *gin.Context) {
 func BookLists(ctx context.Context, c *gin.Context) {
 	client := db.OpenMariadb()
 	defer client.Close()
-	books, err := client.Book.     
-	Query().                   
-	All(ctx)
+	books, err := client.Book.
+		Query().
+		All(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
