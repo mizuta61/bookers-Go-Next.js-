@@ -3,18 +3,27 @@ package main
 import (
 	"api/models"
 	"context"
+	"fmt"
+	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 )
 
 
 
 func main()  {
+	err := godotenv.Load(".env")
+	if err != nil {
+		fmt.Printf("読み込み出来ませんでした: %v", err)
+	} 
+	front_url := os.Getenv("FRONT_URL")
+
 	r := gin.Default()
 	config := cors.DefaultConfig()
-  config.AllowOrigins = []string{"http://localhost:3000"}
+  config.AllowOrigins = []string{front_url}
   r.Use(cors.New(config))
 
 	ctx := context.Background()
