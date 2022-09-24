@@ -24,7 +24,6 @@ func main() {
 	ctx := context.Background()
 
 	client := db.OpenMariadb()
-	defer client.Close()
 	err := client.Schema.Create(
 		ctx,
 		migrate.WithDropIndex(true),
@@ -33,6 +32,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed creating schema resources: %v", err)
 	}
+	client.Close()
 
 	r.GET("/books", func(c *gin.Context) {
 		models.GetBooks(ctx, c)
