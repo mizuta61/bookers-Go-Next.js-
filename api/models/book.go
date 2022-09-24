@@ -30,11 +30,13 @@ func CreateBook(ctx context.Context, c *gin.Context) {
 		SetTitle(form.Title).
 		SetBody(form.Body).
 		Save(ctx)
-	if err != nil {
-		log.Fatal(err)
+	if err == nil {
+		log.Println("book was created: ", book)
+		c.JSON(200, book)
+	} else {
+		c.JSON(400, gin.H{"message": err.Error()})
 	}
-	log.Println("book was created: ", book)
-	c.JSON(200, book)
+
 }
 
 func UpdateBook(ctx context.Context, c *gin.Context) {

@@ -31,3 +31,10 @@ func ValidColumn(column string) bool {
 	}
 	return false
 }
+
+var (
+	// TitleValidator is a validator for the "title" field. It is called by the builders before save.
+	TitleValidator func(string) error
+	// BodyValidator is a validator for the "body" field. It is called by the builders before save.
+	BodyValidator func(string) error
+)

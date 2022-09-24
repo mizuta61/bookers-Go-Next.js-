@@ -2,8 +2,23 @@
 
 package ent
 
+import (
+	"api/ent/book"
+	"api/ent/schema"
+)
+
 // The init function reads all schema descriptors with runtime code
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	bookFields := schema.Book{}.Fields()
+	_ = bookFields
+	// bookDescTitle is the schema descriptor for title field.
+	bookDescTitle := bookFields[0].Descriptor()
+	// book.TitleValidator is a validator for the "title" field. It is called by the builders before save.
+	book.TitleValidator = bookDescTitle.Validators[0].(func(string) error)
+	// bookDescBody is the schema descriptor for body field.
+	bookDescBody := bookFields[1].Descriptor()
+	// book.BodyValidator is a validator for the "body" field. It is called by the builders before save.
+	book.BodyValidator = bookDescBody.Validators[0].(func(string) error)
 }

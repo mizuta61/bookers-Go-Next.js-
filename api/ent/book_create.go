@@ -110,8 +110,18 @@ func (bc *BookCreate) check() error {
 	if _, ok := bc.mutation.Title(); !ok {
 		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Book.title"`)}
 	}
+	if v, ok := bc.mutation.Title(); ok {
+		if err := book.TitleValidator(v); err != nil {
+			return &ValidationError{Name: "title", err: fmt.Errorf(`ent: validator failed for field "Book.title": %w`, err)}
+		}
+	}
 	if _, ok := bc.mutation.Body(); !ok {
 		return &ValidationError{Name: "body", err: errors.New(`ent: missing required field "Book.body"`)}
+	}
+	if v, ok := bc.mutation.Body(); ok {
+		if err := book.BodyValidator(v); err != nil {
+			return &ValidationError{Name: "body", err: fmt.Errorf(`ent: validator failed for field "Book.body": %w`, err)}
+		}
 	}
 	return nil
 }
