@@ -7,6 +7,7 @@ services:
       - ./api:/app
     depends_on:
       - db
+    env_file: ./api/.env
   front: 
     build: ./front
     volumes:
