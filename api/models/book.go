@@ -20,26 +20,17 @@ func GetBookId(c *gin.Context) int {
 	return book_id
 }
 
-func CreateBook(ctx context.Context, c *gin.Context) {
-	client := db.OpenMariadb()
-	defer client.Close()
-	var form ent.Book
-	c.ShouldBind(&form)
+func CreateBook(client *ent.Client, book *ent.Book) (*ent.Book, error) {
+	ctx := context.Background()
 	book, err := client.Book.
 		Create().
-		SetTitle(form.Title).
-		SetBody(form.Body).
+		SetTitle(book.Title).
+		SetBody(book.Body).
 		Save(ctx)
-	if err == nil {
-		log.Println("book was created: ", book)
-		c.JSON(200, book)
-	} else {
-		c.JSON(400, gin.H{"message": err.Error()})
-	}
-
+	return book, err
 }
 
-func UpdateBook(ctx context.Context, c *gin.Context) {
+func UpdateBook(ctx context.Context, c *gin.Context) (*ent.Book, error) {
 	client := db.OpenMariadb()
 	defer client.Close()
 	book_id := GetBookId(c)
@@ -50,11 +41,7 @@ func UpdateBook(ctx context.Context, c *gin.Context) {
 		SetTitle(form.Title).
 		SetBody(form.Body).
 		Save(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Println("book was updated: ", book)
-	c.JSON(200, book)
+	return book, err
 }
 
 func DestroyBook(ctx context.Context, c *gin.Context) {
@@ -69,28 +56,20 @@ func DestroyBook(ctx context.Context, c *gin.Context) {
 	}
 }
 
-func GetBook(ctx context.Context, c *gin.Context) {
-	client := db.OpenMariadb()
-	defer client.Close()
-	book_id := GetBookId(c)
+func GetBook(client *ent.Client, book_id int) (*ent.Book, error) {
+	ctx := context.Background()
 	book, err := client.Book.
 		Query().
 		Where(book.ID(book_id)).
 		Only(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-	c.JSON(200, book)
+	return book, err
 }
 
-func GetBooks(ctx context.Context, c *gin.Context) {
+func GetBooks(ctx context.Context, c *gin.Context) ([]*ent.Book, error) {
 	client := db.OpenMariadb()
 	defer client.Close()
 	books, err := client.Book.
 		Query().
 		All(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-	c.JSON(200, books)
+	return books, err
 }

@@ -7,6 +7,8 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0
 )
 
+require github.com/mattn/go-sqlite3 v1.14.15
+
 require (
 	ariga.io/atlas v0.5.1-0.20220717122844-8593d7eb1a8e // indirect
 	entgo.io/ent v0.11.2

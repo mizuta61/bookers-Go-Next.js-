@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"log"
+	"os"
 
 	"api/ent"
 
@@ -10,7 +11,9 @@ import (
 )
 
 func OpenMariadb() (*ent.Client) {
-    client, err := ent.Open("mysql", "root:password@tcp(db:3306)/mysql?parseTime=True")
+    db_client := os.Getenv("DB_CLIENT")
+    db_url := os.Getenv("DB_URL")
+    client, err := ent.Open(db_client, db_url)
     if err != nil {
         log.Fatal(err)
     }
