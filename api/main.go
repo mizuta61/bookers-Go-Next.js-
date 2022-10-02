@@ -46,7 +46,9 @@ func main() {
 	client.Close()
 
 	r.GET("/books", func(c *gin.Context) {
-		books, err := models.GetBooks(ctx, c)
+		client := db.OpenMariadb()
+		defer client.Close()
+		books, err := models.GetBooks(client)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -54,7 +56,7 @@ func main() {
 	})
 	r.POST("/books", func(c *gin.Context) {
 		client := db.OpenMariadb()
-	  defer client.Close()
+		defer client.Close()
 		var book *ent.Book
 		c.ShouldBind(&book)
 		book, err := models.CreateBook(client, book)
@@ -67,7 +69,7 @@ func main() {
 	})
 	r.GET("books/:id", func(c *gin.Context) {
 		client := db.OpenMariadb()
-	  defer client.Close()
+		defer client.Close()
 		book_id := GetBookId(c)
 		book, err := models.GetBook(client, book_id)
 		if err != nil {
@@ -76,7 +78,12 @@ func main() {
 		c.JSON(200, book)
 	})
 	r.PATCH("books/:id", func(c *gin.Context) {
-		book, err := models.UpdateBook(ctx, c)
+		client := db.OpenMariadb()
+		defer client.Close()
+		book_id := GetBookId(c)
+		var form ent.Book
+		c.ShouldBind(&form)
+		book, err := models.UpdateBook(client, book_id, form)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -84,7 +91,13 @@ func main() {
 		c.JSON(200, book)
 	})
 	r.DELETE("books/:id", func(c *gin.Context) {
-		models.DestroyBook(ctx, c)
+		client := db.OpenMariadb()
+		defer client.Close()
+		book_id := GetBookId(c)
+		err := models.DestroyBook(client, book_id)
+		if err != nil {
+			log.Fatal(err)
+		}
 	})
 
 	r.Run()
